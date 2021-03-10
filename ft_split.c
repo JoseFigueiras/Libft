@@ -1,26 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jfigueir <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/03/10 18:53:41 by jfigueir          #+#    #+#             */
+/*   Updated: 2021/03/10 19:01:28 by jfigueir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
-static t_uint	word_count(char const *str, char sep);
-static int		init_list(char const *str, char sep, char **list, t_uint
-					n_words);
-static t_uint	count_letters(char const *str, char sep);
-
-char	**ft_split(char const *s, char c)
+static t_uint	count_letters(char const *str, char sep)
 {
-	char	**ret;
-	t_uint	n_words;
+	t_uint	i;
 
-	n_words = word_count(s, c);
-	ret = malloc((n_words + 1) * sizeof(char *));
-	if (!ret)
-		return (NULL);
-	if (!(init_list(s, c, ret, n_words)))
-		return (NULL);
-	ret[n_words] = NULL;
-	return (ret);
+	i = 0;
+	while (str[i] && str[i] != sep)
+		i++;
+	return (i);
 }
 
-static int	init_list(char const *str, char sep, char **list, t_uint n_words)
+static int		init_list(char const *str, char sep, char **list,
+					t_uint n_words)
 {
 	t_uint	word_index;
 	t_uint	next_word_len;
@@ -49,16 +52,6 @@ static int	init_list(char const *str, char sep, char **list, t_uint n_words)
 	return (1);
 }
 
-static t_uint	count_letters(char const *str, char sep)
-{
-	t_uint	i;
-
-	i = 0;
-	while (str[i] && str[i] != sep)
-		i++;
-	return (i);
-}
-
 static t_uint	word_count(char const *str, char sep)
 {
 	t_uint	counter;
@@ -80,4 +73,19 @@ static t_uint	word_count(char const *str, char sep)
 		str++;
 	}
 	return (counter);
+}
+
+char			**ft_split(char const *s, char c)
+{
+	char	**ret;
+	t_uint	n_words;
+
+	n_words = word_count(s, c);
+	ret = malloc((n_words + 1) * sizeof(char *));
+	if (!ret)
+		return (NULL);
+	if (!(init_list(s, c, ret, n_words)))
+		return (NULL);
+	ret[n_words] = NULL;
+	return (ret);
 }

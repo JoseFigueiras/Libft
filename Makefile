@@ -1,7 +1,7 @@
 FLAGS = -Wall -Wextra -Werror
 AR = ar rcs
 
-BIN = libft.a
+NAME = libft.a
 
 SRCS =	ft_calloc.c			\
 		ft_strdup.c			\
@@ -62,14 +62,14 @@ OBJS_BONUS = $(BONUS:.c=.o)
 
 
 all: $(OBJS)
-	ar rcs $(BIN) $(OBJS)
+	ar rcs $(NAME) $(OBJS)
 
 so:
 	gcc -c $(FLAGS) -fPIC $(SRCS) $(BONUS)
 	gcc -shared -o libft.so $(OBJS) $(OBJS_BONUS)
 
 bonus: $(OBJS_BONUS) $(OBJS)
-	ar rcs $(BIN) $(OBJS) $(OBJS_BONUS)
+	ar rcs $(NAME) $(OBJS) $(OBJS_BONUS)
 
 %.o: %.c
 	gcc $(FLAGS) -g -c $< -o $@
@@ -78,7 +78,7 @@ clean:
 	rm -f $(OBJS) $(OBJS_BONUS)
 
 fclean: clean
-	rm -f $(BIN)
+	rm -f $(NAME)
 
 re: fclean all
 
