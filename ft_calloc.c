@@ -21,10 +21,6 @@ void	*ft_calloc(size_t num, size_t size)
 	if (!ptr)
 		return (0);
 	i = 0;
-	while (i < num)
-	{
-		((int*)ptr)[i] = 0;
-		i++;
-	}
+	ft_bzero(ptr, num);
 	return (ptr);
 }
