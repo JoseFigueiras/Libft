@@ -1,91 +1,107 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jfigueir <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/10 18:53:41 by jfigueir          #+#    #+#             */
-/*   Updated: 2021/03/10 19:01:28 by jfigueir         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "libft.h"
 
-static t_uint	count_letters(char const *str, char sep)
+static int		ft_hm(char const *s, char c)
 {
-	t_uint	i;
+	size_t	nbr;
+	int		i;
+
+	nbr = 0;
+	i = 0;
+	while (s[i])
+	{
+		while (s[i] == c)
+			i++;
+		if (i > 0 && s[i] && s[i - 1] == c)
+			nbr++;
+		if (s[i])
+			i++;
+	}
+	if (nbr == 0 && s[i - 1] == c)
+		return (0);
+	if (s[0] != c)
+		nbr++;
+	return (nbr);
+}
+
+static char		**ft_mal(char **strs, char const *s, char c)
+{
+	size_t	count;
+	int		i;
+	int		h;
+
+	count = 0;
+	i = 0;
+	h = 0;
+	while (s[h])
+	{
+		if (s[h] != c)
+			count++;
+		else if (h > 0 && s[h - 1] != c)
+		{
+			strs[i] = malloc(sizeof(char) * (count + 1));
+			if (!strs[i])
+				return (0);
+			count = 0;
+			i++;
+		}
+		if (s[h + 1] == '\0' && s[h] != c)
+			if (!(strs[i] = malloc(sizeof(char) * count + 1)))
+				return (0);
+		h++;
+	}
+	return (strs);
+}
+
+static char		**ft_cpy(char **strs, char const *s, char c)
+{
+	int i;
+	int j;
+	int h;
 
 	i = 0;
-	while (str[i] && str[i] != sep)
-		i++;
-	return (i);
-}
-
-static int		init_list(char const *str, char sep, char **list,
-					t_uint n_words)
-{
-	t_uint	word_index;
-	t_uint	next_word_len;
-	t_uint	i;
-
-	word_index = 0;
-	while (word_index < n_words)
+	j = 0;
+	h = 0;
+	while (s[h])
 	{
-		while (*str == sep)
-			str++;
-		next_word_len = count_letters(str, sep);
-		if (next_word_len == 0)
-		{
-			list[word_index] = NULL;
-			return (1);
-		}
-		list[word_index] = malloc(next_word_len);
-		if (!(list[word_index]))
-			return (0);
-		i = 0;
-		while (*str != sep && *str)
-			list[word_index][i++] = *str++;
-		list[word_index][next_word_len] = '\0';
-		word_index++;
+		if (s[h] != c)
+			strs[i][j++] = s[h];
+		else if (h > 0 && s[h - 1] != c)
+			if (h != 0)
+			{
+				strs[i][j] = '\0';
+				j = 0;
+				i++;
+			}
+		if (s[h + 1] == '\0' && s[h] != c)
+			strs[i][j] = '\0';
+		h++;
 	}
-	return (1);
-}
-
-static t_uint	word_count(char const *str, char sep)
-{
-	t_uint	counter;
-	t_uint	is_word;
-
-	if (!str)
-		return (0);
-	is_word = FALSE;
-	counter = 0;
-	while (*str)
-	{
-		if (!is_word && *str != sep)
-		{
-			counter++;
-			is_word = TRUE;
-		}
-		else if (is_word && *str == sep)
-			is_word = FALSE;
-		str++;
-	}
-	return (counter);
+	return (strs);
 }
 
 char			**ft_split(char const *s, char c)
 {
-	char	**ret;
-	t_uint	n_words;
+	char	**rtn;
+	int		nbr_w;
 
-	n_words = word_count(s, c);
-	ret = malloc((n_words + 1) * sizeof(char *));
-	if (!ret)
+	if (!s || !*s)
+	{
+		if (!(rtn = malloc(sizeof(char *) * 1)))
+			return (NULL);
+		*rtn = (void *)0;
+		return (rtn);
+	}
+	nbr_w = ft_hm(s, c);
+	rtn = malloc(sizeof(char *) * (nbr_w + 1));
+	if (!rtn)
+		return (0);
+	if (ft_mal(rtn, s, c) != 0)
+		ft_cpy(rtn, s, c);
+	else
+	{
+		free(rtn);
 		return (NULL);
-	if (!(init_list(s, c, ret, n_words)))
-		return (NULL);
-	ret[n_words] = NULL;
-	return (ret);
+	}
+	rtn[nbr_w] = (void *)0;
+	return (rtn);
 }
