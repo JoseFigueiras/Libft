@@ -85,5 +85,10 @@ t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
 
 t_u64				ft_power(t_u64 base, t_u64 power);
+int					ft_is_in(char c, char *sample);
+char				**ft_str_split(char *s, char *sample);
+int					ft_strcmp(char *s1, char *s2);
+int					ft_clamp(int min, int num, int max);
+float				ft_fclamp(float min, float num, float max);
 
 #endif
