@@ -46,7 +46,7 @@ static char	*get_save(char *save)
 		free(save);
 		return (0);
 	}
-	ret = malloc((ft_strlen(save) - i) + 1);
+	ret = malloc((ft_len(save) - i) + 1);
 	if (!ret)
 		return (0);
 	i++;
